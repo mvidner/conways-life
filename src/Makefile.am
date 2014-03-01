@@ -2,5 +2,6 @@
 # This Makefile.am is free software; the Free Software Foundation
 # gives unlimited permission to copy, distribute and modify it.
 
-bin_PROGRAMS = hello
-hello_SOURCES = main.c
+bin_PROGRAMS = conways_life
+conways_life_SOURCES = main.cc conways_life.cc random.cc
+AM_CXXFLAGS = -g3 -O3 -Wall

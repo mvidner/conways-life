@@ -1,10 +1,6 @@
-# Copyright (C) 2006-2013 Free Software Foundation, Inc.
-# This configure.ac script is free software; the Free Software Foundation
-# gives unlimited permission to copy, distribute and modify it.
-
-AC_INIT([amhello], [1.0], [bug-automake@gnu.org])
+AC_INIT([conways_life], [0.8], [martin@vidner.net])
 AM_INIT_AUTOMAKE([-Wall -Werror foreign])
-AC_PROG_CC
+AC_PROG_CXX
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_FILES([
  Makefile
