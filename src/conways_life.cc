@@ -1,30 +1,36 @@
 #include "conways_life.h"
 #include <cstring>
 
+#include <cstdio>
 ConwaysLife::ConwaysLife() {
   clear();
 }
 
 void ConwaysLife::clear() {
-  board = board1;
-  next_board = board2;
-  memset(board, 0, SIZE_X * SIZE_Y);
+  current_board = 0;
+  memset(boards, 0, sizeof(boards));
 }
 
 ConwaysLife::State ConwaysLife::get(int x, int y) const {
+  const Board * board = &boards[current_board];
   x = (x + SIZE_X) % SIZE_X;
   y = (y + SIZE_Y) % SIZE_Y;
-  return State(board[SIZE_X * y + x]);
+  return (*board)[SIZE_X * y + x];
+}
+
+void ConwaysLife::set_board(unsigned x, unsigned y, ConwaysLife::State s, unsigned board_idx) {
+  if (x < SIZE_X && y < SIZE_Y) {
+    boards[board_idx][SIZE_X * y + x] = s;
+  }
 }
 
 void ConwaysLife::set(unsigned x, unsigned y, ConwaysLife::State s) {
-  if (x < SIZE_X && y < SIZE_Y) {
-    board[SIZE_X * y + x] = s;
-  }
+  set_board(x, y, s, current_board);
 }
 
 void ConwaysLife::next() {
 #define g(dx, dy) (unsigned ( get(x + (dx), y + (dy)) ))
+  unsigned next_board = (current_board + 1) % NBOARDS;
   for (unsigned y = 0; y < size_y(); ++y) {
     for (unsigned x = 0; x < size_x(); ++x) {
       int count =
@@ -36,11 +42,9 @@ void ConwaysLife::next() {
 	next_state = (count == 2 || count == 3)? ALIVE : DEAD;
       else
 	next_state = (count == 3)? ALIVE : DEAD;
-      next_board[SIZE_X * y + x] = next_state;
+      set_board(x, y, next_state, next_board);
     }
   }
-  State * tmp = board;
-  board = next_board;
-  next_board = tmp;
+  current_board = next_board;
 #undef g
 }

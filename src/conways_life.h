@@ -4,6 +4,7 @@
 class ConwaysLife {
   static const unsigned SIZE_X = 120;
   static const unsigned SIZE_Y = 30;
+  static const unsigned NBOARDS = 2;
 public:
   enum State { DEAD = 0, ALIVE = 1 };
 
@@ -11,18 +12,22 @@ public:
 
   void clear();
   void next();
-  bool stabilized() const;
+  // return 0 if the board has not yet stabilized,
+  // or the oscillation period
+  int stabilized() const;
 
   unsigned size_x() const { return SIZE_X; };
   unsigned size_y() const { return SIZE_Y; };
   
+  // operates on the current_board
   State get(int x, int y) const;
+  // operates on the current_board
   void set(unsigned x, unsigned y, State s);
+  void set_board(unsigned x, unsigned y, State s, unsigned board_idx);
 
 private:
-  State * board;
-  State * next_board;
-  State board1[SIZE_X * SIZE_Y];
-  State board2[SIZE_X * SIZE_Y];
+  typedef State Board[SIZE_X * SIZE_Y];
+  Board boards[NBOARDS];
+  unsigned current_board;
 };
 #endif
