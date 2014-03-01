@@ -1,4 +1,5 @@
 #include "conways_life.h"
+#include "random.h"
 
 #include <cstdlib>
 #include <cstdio>
@@ -32,12 +33,12 @@ void print(const ConwaysLife &cl) {
 }
 
 const double live_p = 0.2;
-int LIVE_MAX = int (live_p * RAND_MAX);
+int LIVE_MAX = int (live_p * MY_RAND_MAX);
 
 void random_setup(ConwaysLife &cl) {
   for (unsigned y = 0; y < cl.size_y(); ++y) {
     for (unsigned x = 0; x < cl.size_x(); ++x) {
-      cl.set(x, y, ConwaysLife::State(rand() <= LIVE_MAX));
+      cl.set(x, y, ConwaysLife::State(myrand() <= LIVE_MAX));
     }
   }
 }
@@ -52,7 +53,7 @@ int main(int argc, char ** argv) {
       quiet = 1;
       break;
     case 's':
-      // 9 produces 4190 generations :)
+      // 17 produces 2869 generations :)
       seed = atoi(optarg);
       break;
     default: /* '?' */
@@ -68,7 +69,7 @@ int main(int argc, char ** argv) {
   }
 
   int generations = 0;
-  srand(seed);
+  mysrand(seed);
   ConwaysLife cl;
   const char * preset[] = {" x ", "  x", "xxx", NULL};
   set_lines(cl, preset);
