@@ -52,13 +52,18 @@ double gettimeofday_d() {
 
 int seed;
 int quiet = 0;
+int fast = 0;
 
 void parse_options(int argc, char ** argv) {
   seed = time(NULL);
   int opt;
-  while ((opt = getopt(argc, argv, "qs:")) != -1) {
+  while ((opt = getopt(argc, argv, "fqs:")) != -1) {
     switch (opt) {
+    case 'f':
+      fast = 1;
+      break;
     case 'q':
+      fast = 1;
       quiet = 1;
       break;
     case 's':
@@ -66,7 +71,7 @@ void parse_options(int argc, char ** argv) {
       break;
     default: /* '?' */
       // 704 produces 7889 generations :)
-      fprintf(stderr, "Usage: %s [-s seed (try 704)] [-q(uiet)]\n",
+      fprintf(stderr, "Usage: %s [-s seed (try 704)] [-q(uiet)] [-f(ast)\n",
 	      argv[0]);
       exit(EXIT_FAILURE);
     }
@@ -89,9 +94,11 @@ int main(int argc, char ** argv) {
   int period;
   double start_time = gettimeofday_d();
   do {
-    if (!quiet) {
+    if (!fast) {
       usleep(50000);
-      puts("\e[2J");		// VT102 erase whole display
+    }
+    if (!quiet) {
+      puts("\e[1;1H");		// VT102 mover cursor to pos 1; 1
       print(cl);
     }
     cl.next();
@@ -102,9 +109,9 @@ int main(int argc, char ** argv) {
     period = cl.stabilized();
   } while (period == 0);
   double elapsed = gettimeofday_d() - start_time;
-  printf("%d generations, period: %d, seed: %d\n",
+  fprintf(stderr, "%d generations, period: %d, seed: %d\n",
 	 generations, period, seed);
-  printf("   %g s elapsed, %g cells/s\n",
+  fprintf(stderr, "   %g s elapsed, %g cells/s\n",
 	 elapsed,
 	 generations * cl.size_x() * cl.size_y() / elapsed);
   return 0;
