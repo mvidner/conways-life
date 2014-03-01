@@ -6,6 +6,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <ctime>
+#include <sys/time.h>
 
 // input: spaces dead, other alive
 void set_lines(ConwaysLife& cl, const char ** lines) {
@@ -43,9 +44,17 @@ void random_setup(ConwaysLife &cl) {
   }
 }
 
-int main(int argc, char ** argv) {
-  int seed = time(NULL);
-  int quiet = 0;
+double gettimeofday_d() {
+  struct timeval t;
+  gettimeofday(&t, NULL);
+  return t.tv_sec + (t.tv_usec / 1000000.0);
+}
+
+int seed;
+int quiet = 0;
+
+void parse_options(int argc, char ** argv) {
+  seed = time(NULL);
   int opt;
   while ((opt = getopt(argc, argv, "qs:")) != -1) {
     switch (opt) {
@@ -56,8 +65,8 @@ int main(int argc, char ** argv) {
       seed = atoi(optarg);
       break;
     default: /* '?' */
-      // 18 produces 3436 generations :)
-      fprintf(stderr, "Usage: %s [-s seed (try 18)] [-q(uiet)]\n",
+      // 704 produces 7889 generations :)
+      fprintf(stderr, "Usage: %s [-s seed (try 704)] [-q(uiet)]\n",
 	      argv[0]);
       exit(EXIT_FAILURE);
     }
@@ -67,12 +76,18 @@ int main(int argc, char ** argv) {
 	      argv[optind]);
       exit(EXIT_FAILURE);
   }
+}
 
-  int generations = 0;
+int main(int argc, char ** argv) {
+  parse_options(argc, argv);
   mysrand(seed);
+
   ConwaysLife cl;
   random_setup(cl);
+
+  int generations = 0;
   int period;
+  double start_time = gettimeofday_d();
   do {
     if (!quiet) {
       usleep(50000);
@@ -86,7 +101,11 @@ int main(int argc, char ** argv) {
     }
     period = cl.stabilized();
   } while (period == 0);
-  printf("generations: %d, period: %d, seed: %d\n",
+  double elapsed = gettimeofday_d() - start_time;
+  printf("%d generations, period: %d, seed: %d\n",
 	 generations, period, seed);
+  printf("   %g s elapsed, %g cells/s\n",
+	 elapsed,
+	 generations * cl.size_x() * cl.size_y() / elapsed);
   return 0;
 }
