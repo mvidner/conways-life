@@ -53,11 +53,11 @@ int main(int argc, char ** argv) {
       quiet = 1;
       break;
     case 's':
-      // 17 produces 2869 generations :)
       seed = atoi(optarg);
       break;
     default: /* '?' */
-      fprintf(stderr, "Usage: %s [-s seed] [-q(uiet)]\n",
+      // 18 produces 3436 generations :)
+      fprintf(stderr, "Usage: %s [-s seed (try 18)] [-q(uiet)]\n",
 	      argv[0]);
       exit(EXIT_FAILURE);
     }
