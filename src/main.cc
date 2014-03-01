@@ -71,8 +71,6 @@ int main(int argc, char ** argv) {
   int generations = 0;
   mysrand(seed);
   ConwaysLife cl;
-  const char * preset[] = {" x ", "  x", "xxx", NULL};
-  set_lines(cl, preset);
   random_setup(cl);
   int period;
   do {
