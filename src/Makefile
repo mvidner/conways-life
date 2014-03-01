@@ -1,0 +1,1 @@
+all: conways_life
