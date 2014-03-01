@@ -4,7 +4,7 @@
 class ConwaysLife {
   static const unsigned SIZE_X = 84;
   static const unsigned SIZE_Y = 48;
-  static const unsigned NBOARDS = 3;
+  static const unsigned NBOARDS = 4;
 public:
   enum State { DEAD = 0, ALIVE = 1 };
 
