@@ -2,10 +2,11 @@
 #include <cstdio>
 #include <cstring>
 #include <unistd.h>
+#include <ctime>
 
 class ConwaysLife {
-  static const unsigned SIZE_X = 10;
-  static const unsigned SIZE_Y = 5;
+  static const unsigned SIZE_X = 120;
+  static const unsigned SIZE_Y = 30;
 public:
   enum State { DEAD = 0, ALIVE = 1 };
 
@@ -107,14 +108,28 @@ void print(const ConwaysLife &cl) {
   putchar('\n');
 }
 
+const double live_p = 0.2;
+int LIVE_MAX = int (live_p * RAND_MAX);
+
+void random_setup(ConwaysLife &cl) {
+  for (unsigned y = 0; y < cl.size_y(); ++y) {
+    for (unsigned x = 0; x < cl.size_x(); ++x) {
+      cl.set(x, y, ConwaysLife::State(rand() <= LIVE_MAX));
+    }
+  }
+}
+
 int main() {
+  srand(time(NULL));
   ConwaysLife cl;
-  const char * preset[] = {"   ", "xxx", "   ", NULL};
+  const char * preset[] = {" x ", "  x", "xxx", NULL};
   set_lines(cl, preset);
+  random_setup(cl);
   while(true) {
+    puts("\e[2J");		// VT102 erase whole display
     print(cl);
     cl.next();
-    usleep(1500000);
+    usleep(50000);
   }
   return 0;
 }
