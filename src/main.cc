@@ -58,6 +58,7 @@ void parse_options(int argc, char ** argv) {
   seed = time(NULL);
   int opt;
   //  -s 1393697847 -p 0.32 has period 3
+  // -p 0.34 -s 327 has a pentadecathlon
   while ((opt = getopt(argc, argv, "fp:qs:u:")) != -1) {
     switch (opt) {
     case 'f':
