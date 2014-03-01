@@ -19,7 +19,7 @@ public:
   unsigned size_x() const { return SIZE_X; };
   unsigned size_y() const { return SIZE_Y; };
   
-  State get(unsigned x, unsigned y) const;
+  State get(int x, int y) const;
   void set(unsigned x, unsigned y, State s);
 
 private:
@@ -45,13 +45,10 @@ void ConwaysLife::clear() {
 
 }
 
-ConwaysLife::State ConwaysLife::get(unsigned x, unsigned y) const {
-  if (x < SIZE_X && y < SIZE_Y) {
-    return State(board[SIZE_X * y + x]);
-  }
-  else {
-    return DEAD;
-  }
+ConwaysLife::State ConwaysLife::get(int x, int y) const {
+  x = (x + SIZE_X) % SIZE_X;
+  y = (y + SIZE_Y) % SIZE_Y;
+  return State(board[SIZE_X * y + x]);
 }
 
 void ConwaysLife::set(unsigned x, unsigned y, ConwaysLife::State s) {
