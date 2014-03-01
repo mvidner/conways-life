@@ -1,0 +1,4 @@
+# looks like this will not work:
+# https://stackoverflow.com/questions/19419782/exit-c-text0x18-undefined-reference-to-exit-when-using-arm-none-eabi-gcc
+PATH=${HOME}/gcc-arm/bin:${PATH} ../configure --build=i686-pc-linux-gnu --host=arm-none-eabi
+
