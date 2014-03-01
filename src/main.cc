@@ -42,19 +42,52 @@ void random_setup(ConwaysLife &cl) {
   }
 }
 
-int main() {
+int main(int argc, char ** argv) {
+  int seed = time(NULL);
+  int quiet = 0;
+  int opt;
+  while ((opt = getopt(argc, argv, "qs:")) != -1) {
+    switch (opt) {
+    case 'q':
+      quiet = 1;
+      break;
+    case 's':
+      // 9 produces 4190 generations :)
+      seed = atoi(optarg);
+      break;
+    default: /* '?' */
+      fprintf(stderr, "Usage: %s [-s seed] [-q(uiet)]\n",
+	      argv[0]);
+      exit(EXIT_FAILURE);
+    }
+  }
+  if (optind < argc) {
+      fprintf(stderr, "Superfluous argument '%s'\n",
+	      argv[optind]);
+      exit(EXIT_FAILURE);
+  }
+
   int generations = 0;
-  srand(time(NULL));
+  srand(seed);
   ConwaysLife cl;
   const char * preset[] = {" x ", "  x", "xxx", NULL};
   set_lines(cl, preset);
   random_setup(cl);
-  while(true) {
-    puts("\e[2J");		// VT102 erase whole display
-    print(cl);
+  int period;
+  do {
+    if (!quiet) {
+      usleep(50000);
+      puts("\e[2J");		// VT102 erase whole display
+      print(cl);
+    }
     cl.next();
-    printf("%d\n", generations++);
-    usleep(50000);
-  }
+    ++generations;
+    if (!quiet) {
+      printf("%d\n", generations);
+    }
+    period = cl.stabilized();
+  } while (period == 0);
+  printf("generations: %d, period: %d, seed: %d\n",
+	 generations, period, seed);
   return 0;
 }

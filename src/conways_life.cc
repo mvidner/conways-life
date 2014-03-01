@@ -48,3 +48,13 @@ void ConwaysLife::next() {
   current_board = next_board;
 #undef g
 }
+
+int ConwaysLife::stabilized() const {
+  for(unsigned other_offset = 1; other_offset < NBOARDS; ++other_offset) {
+    int compared = memcmp(&boards[current_board], &boards[(current_board - other_offset + NBOARDS) % NBOARDS], sizeof(Board));
+    if (compared == 0) {
+      return other_offset;
+    }
+  }
+  return 0;
+}
