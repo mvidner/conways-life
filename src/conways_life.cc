@@ -22,7 +22,10 @@ public:
   void set(unsigned x, unsigned y, State s);
 
 private:
-  State board[SIZE_X * SIZE_Y];
+  State * board;
+  State * next_board;
+  State board1[SIZE_X * SIZE_Y];
+  State board2[SIZE_X * SIZE_Y];
 };
 
 ConwaysLife::ConwaysLife() {
@@ -31,6 +34,8 @@ ConwaysLife::ConwaysLife() {
 
 void ConwaysLife::clear() {
   //  memset(board, 0, SIZE_X * SIZE_Y);
+  board = board1;
+  next_board = board2;
   for (unsigned y = 0; y < size_y(); ++y) {
     for (unsigned x = 0; x < size_x(); ++x) {
       set(x, y, DEAD);
@@ -55,10 +60,25 @@ void ConwaysLife::set(unsigned x, unsigned y, ConwaysLife::State s) {
 }
 
 void ConwaysLife::next() {
+#define g(dx, dy) (unsigned ( get(x + (dx), y + (dy)) ))
   for (unsigned y = 0; y < size_y(); ++y) {
     for (unsigned x = 0; x < size_x(); ++x) {
+      int count =
+	g(-1, -1) + g(-1, 0) + g(-1, +1) +
+	g( 0, -1) +     0    + g( 0, +1) +
+	g(+1, -1) + g(+1, 0) + g(+1, +1);
+      State next_state;
+      if (g(0, 0))
+	next_state = (count == 2 || count == 3)? ALIVE : DEAD;
+      else
+	next_state = (count == 3)? ALIVE : DEAD;
+      next_board[SIZE_X * y + x] = next_state;
     }
   }
+  State * tmp = board;
+  board = next_board;
+  next_board = tmp;
+#undef g
 }
 
 // input: spaces dead, other alive
@@ -89,7 +109,7 @@ void print(const ConwaysLife &cl) {
 
 int main() {
   ConwaysLife cl;
-  const char * preset[] = {" x ", "xxx", " x ", NULL};
+  const char * preset[] = {"   ", "xxx", "   ", NULL};
   set_lines(cl, preset);
   while(true) {
     print(cl);
