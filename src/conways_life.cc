@@ -34,15 +34,9 @@ ConwaysLife::ConwaysLife() {
 }
 
 void ConwaysLife::clear() {
-  //  memset(board, 0, SIZE_X * SIZE_Y);
   board = board1;
   next_board = board2;
-  for (unsigned y = 0; y < size_y(); ++y) {
-    for (unsigned x = 0; x < size_x(); ++x) {
-      set(x, y, DEAD);
-    }
-  }
-
+  memset(board, 0, SIZE_X * SIZE_Y);
 }
 
 ConwaysLife::State ConwaysLife::get(int x, int y) const {
@@ -102,7 +96,6 @@ void print(const ConwaysLife &cl) {
     }
     putchar('\n');
   }
-  putchar('\n');
 }
 
 const double live_p = 0.2;
@@ -117,6 +110,7 @@ void random_setup(ConwaysLife &cl) {
 }
 
 int main() {
+  int generations = 0;
   srand(time(NULL));
   ConwaysLife cl;
   const char * preset[] = {" x ", "  x", "xxx", NULL};
@@ -126,6 +120,7 @@ int main() {
     puts("\e[2J");		// VT102 erase whole display
     print(cl);
     cl.next();
+    printf("%d\n", generations++);
     usleep(50000);
   }
   return 0;
