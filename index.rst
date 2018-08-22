@@ -10,7 +10,12 @@ Welcome to Conway's Life's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+.. This is a comment I guess,
+   following https://breathe.readthedocs.io/en/latest/
 
+.. doxygenclass:: ConwaysLife
+   :project: conways_life
+   :members:
 
 Indices and tables
 ==================
