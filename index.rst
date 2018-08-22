@@ -13,9 +13,8 @@ Welcome to Conway's Life's documentation!
 .. This is a comment I guess,
    following https://breathe.readthedocs.io/en/latest/
 
-.. doxygenclass:: ConwaysLife
+.. doxygenindex::
    :project: conways_life
-   :members:
 
 Indices and tables
 ==================
